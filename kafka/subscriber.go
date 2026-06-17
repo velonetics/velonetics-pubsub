@@ -68,8 +68,6 @@ func initSubscriber(
 			return nil, err
 		}
 
-		_ = reader.CommitMessages(ctx, msg)
-
 		resp := proxy.Response{Data: data, IsComplete: true}
 		if cfg.Reader.KeyMeta != "" && len(msg.Key) > 0 {
 			resp.Metadata.Headers = map[string][]string{
@@ -77,6 +75,10 @@ func initSubscriber(
 			}
 		}
 		resp = ef.Format(resp)
+
+		if err := reader.CommitMessages(ctx, msg); err != nil {
+			return nil, err
+		}
 		return &resp, nil
 	}, nil
 }

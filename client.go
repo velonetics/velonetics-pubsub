@@ -164,10 +164,10 @@ func (f *BackendFactory) initSubscriber(ctx context.Context, remote *config.Back
 			return nil, err
 		}
 
-		msg.Ack()
-
 		newResponse := proxy.Response{Data: data, IsComplete: true}
 		newResponse = ef.Format(newResponse)
+
+		msg.Ack()
 		return &newResponse, nil
 	}, nil
 }
