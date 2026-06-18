@@ -14,6 +14,10 @@ import (
 const minExecutionTime = 5 * time.Second
 
 func StartAgent(ctx context.Context, opts async.Options) bool {
+	if _, err := kafkapkg.ParseAsyncDriverConfig(opts.Agent.ExtraConfig); errors.Is(err, kafkapkg.ErrAsyncDriverNotFound) {
+		return false
+	}
+
 	kafkaF := func(ctx context.Context, l logging.Logger) error {
 		driver, err := kafkapkg.ParseAsyncDriverConfig(opts.Agent.ExtraConfig)
 		if err != nil {
@@ -27,13 +31,6 @@ func StartAgent(ctx context.Context, opts async.Options) bool {
 			MaxRate: opts.Agent.Consumer.MaxRate,
 			Driver:  *driver,
 		}, l, opts.AgentPing, time.NewTicker(opts.Agent.Connection.HealthInterval), opts.Proxy)
-	}
-
-	shortCtx, localCancel := context.WithTimeout(ctx, time.Second)
-	defer localCancel()
-
-	if err := kafkaF(shortCtx, logging.NoOp); errors.Is(err, kafkapkg.ErrAsyncDriverNotFound) {
-		return false
 	}
 
 	opts.G.Go(func() error {

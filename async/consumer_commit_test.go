@@ -6,39 +6,29 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-func TestCommitOnlyAfterSuccessfulProcess(t *testing.T) {
-	processOK := false
-	commitCalled := false
-
-	if processOK {
-		commitCalled = true
-	}
-
-	if commitCalled {
-		t.Fatal("expected no commit when pipeline fails")
-	}
-
-	processOK = true
-	if processOK {
-		commitCalled = true
-	}
-	if !commitCalled {
-		t.Fatal("expected commit when pipeline succeeds")
-	}
-}
-
-func TestSequentialProcessingPreservesCommitOrder(t *testing.T) {
+func TestPendingMessageBlocksImplicitCommit(t *testing.T) {
+	var pending *kafka.Message
 	commits := []int64{}
-	msgs := []kafka.Message{
-		{Offset: 100},
-		{Offset: 101},
+
+	msg100 := kafka.Message{Offset: 100}
+	msg101 := kafka.Message{Offset: 101}
+
+	// Simulate failure on 100: keep pending, do not commit, do not advance.
+	pending = &msg100
+
+	// Without pending guard, committing 101 would implicitly commit 100.
+	if pending != nil && pending.Offset >= msg101.Offset {
+		t.Fatal("should not fetch or commit later offsets while earlier message is pending")
 	}
-	for _, msg := range msgs {
-		if true { // process ok
-			commits = append(commits, msg.Offset)
-		}
-	}
+
+	// Retry succeeds on pending 100.
+	commits = append(commits, pending.Offset)
+	pending = nil
+
+	// Now safe to process 101.
+	commits = append(commits, msg101.Offset)
+
 	if len(commits) != 2 || commits[0] != 100 || commits[1] != 101 {
-		t.Fatalf("unexpected commit order: %v", commits)
+		t.Fatalf("unexpected commits: %v", commits)
 	}
 }

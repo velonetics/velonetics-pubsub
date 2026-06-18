@@ -15,6 +15,8 @@ import (
 	"github.com/velonetics/lura/v2/proxy"
 )
 
+const pipelineRetryDelay = time.Second
+
 type consumerOptions struct {
 	Name    string
 	Topic   string
@@ -36,7 +38,7 @@ func runConsumer(ctx context.Context, opts consumerOptions, logger logging.Logge
 	if cap(ping) < 1 {
 		logger.Warning(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] Ping channel with 0 capacity might block this async agent", opts.Name))
 	}
-	ping <- opts.Name
+	sendPing(ctx, ping, opts.Name)
 
 	if opts.Workers < 1 {
 		logger.Error(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] With less than 1 worker this agent does no work", opts.Name))
@@ -64,25 +66,33 @@ func runConsumer(ctx context.Context, opts consumerOptions, logger logging.Logge
 		}
 	}
 
+	var pending *kafka.Message
+
 recvLoop:
 	for !shouldExit.Load().(bool) {
 		select {
 		case <-ctx.Done():
 			return ctx.Err()
 		case <-pingTicker.C:
-			ping <- opts.Name
+			sendPing(ctx, ping, opts.Name)
 			continue
 		default:
 		}
 
-		msg, err := reader.FetchMessage(ctx)
-		if err != nil {
-			if ctx.Err() != nil {
-				return ctx.Err()
+		var msg kafka.Message
+		if pending != nil {
+			msg = *pending
+		} else {
+			var fetchErr error
+			msg, fetchErr = reader.FetchMessage(ctx)
+			if fetchErr != nil {
+				if ctx.Err() != nil {
+					return ctx.Err()
+				}
+				logger.Error(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] FetchMessage:", opts.Name), fetchErr)
+				shouldExit.Store(true)
+				break recvLoop
 			}
-			logger.Error(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] FetchMessage:", opts.Name), err)
-			shouldExit.Store(true)
-			break recvLoop
 		}
 
 		waitIfRequired()
@@ -93,13 +103,29 @@ recvLoop:
 				shouldExit.Store(true)
 				break recvLoop
 			}
-		} else {
-			logger.Warning(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] backend pipeline failed; offset not committed", opts.Name))
+			pending = nil
+			continue
+		}
+
+		pending = &msg
+		logger.Warning(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] backend pipeline failed; retrying offset %d", opts.Name, msg.Offset))
+		select {
+		case <-ctx.Done():
+			return ctx.Err()
+		case <-time.After(pipelineRetryDelay):
 		}
 	}
 
 	logger.Warning(fmt.Sprintf("[SERVICE: AsyncAgent][Kafka][%s] Consumer stopped", opts.Name))
 	return nil
+}
+
+func sendPing(ctx context.Context, ping chan<- string, name string) {
+	select {
+	case ping <- name:
+	case <-ctx.Done():
+	default:
+	}
 }
 
 func newProcessor(ctx context.Context, opts consumerOptions, logger logging.Logger, next proxy.Proxy) func(kafka.Message) bool {
