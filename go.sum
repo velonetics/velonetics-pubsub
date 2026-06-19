@@ -179,6 +179,12 @@ github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 h1:GFCKgm
 github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10/go.mod h1:t/avpk3KcrXxUnYOhZhMXJlSEyie6gQbtLq5NM3loB8=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/pucora/flatmap v1.0.1 h1:SdX1G8ZiCGj6Gk3UGs6VoAQF9VjwhCqcDbuCoJO/ij8=
+github.com/pucora/flatmap v1.0.1/go.mod h1:WD5c42qlY3Ap6V7CXg+F2+Z1xmXDqxNKCHBrzuT64Ls=
+github.com/pucora/lura/v2 v2.0.9 h1:pPBU0rO71JeIp6k4xGwQweKHvd46+0BZRwb1Z7DZBE0=
+github.com/pucora/lura/v2 v2.0.9/go.mod h1:7LJn5CTxnfAFbvsWyk6XqORnXXZ9uI3yn79Anz5qE4g=
+github.com/pucora/pucora-ratelimit/v3 v3.0.1 h1:7GByZbFeZcf0rHWQ5jAqvVaNTl0uePz3cUYdoKVyZv4=
+github.com/pucora/pucora-ratelimit/v3 v3.0.1/go.mod h1:uN0SwKSdOgvsEfvUrhedeh8Ayjr6tXvO1WFCyl8DXsE=
 github.com/rabbitmq/amqp091-go v1.10.0 h1:STpn5XsHlHGcecLmMFCtg7mqq0RnD+zFr4uzukfVhBw=
 github.com/rabbitmq/amqp091-go v1.10.0/go.mod h1:Hy4jKW5kQART1u+JkDTF9YYOQUHXqMuhrgxOEeS7G4o=
 github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 h1:bsUq1dX0N8AOIL7EB/X911+m4EHsnWEHeJ0c+3TTBrg=
@@ -198,12 +204,6 @@ github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
 github.com/valyala/fastrand v1.1.0 h1:f+5HkLW4rsgzdNoleUOB69hyT9IlD2ZQh9GyDMfb5G8=
 github.com/valyala/fastrand v1.1.0/go.mod h1:HWqCzkrkg6QXT8V2EXWvXCoow7vLwOFN002oeRzjapQ=
-github.com/pucora/flatmap v1.0.0 h1:4CPSUHymeYkQ+CQsLMK6dckO8m/R2cyCAmEI1wCBsV8=
-github.com/pucora/flatmap v1.0.0/go.mod h1:sdiHe7b6GlhtUGXOEWMlYB4uLPUCbEQmPy7PV8xmHPo=
-github.com/pucora/lura/v2 v2.0.0 h1:01XH/58S6hIEUnhlR8D/IN0v6yK7JIXM56Tn+1sBfKM=
-github.com/pucora/lura/v2 v2.0.0/go.mod h1:cXeGRH6p+IVaSCFEGRj1cxUrI7prCRlK1v80mBPx3WY=
-github.com/pucora/pucora-ratelimit/v3 v3.0.0 h1:r6AcyQMQ0LolSRDdFH+wwFHv6Ilpei2YVU6b7eWovPs=
-github.com/pucora/pucora-ratelimit/v3 v3.0.0/go.mod h1:nqJ7Tab/e/1/9PWMv30OnSz29lQLKhKyiyTCtiwjl+g=
 github.com/xdg-go/pbkdf2 v1.0.0 h1:Su7DPu48wXMwC3bs7MCNG+z4FhcyEuz5dlvchbq0B0c=
 github.com/xdg-go/pbkdf2 v1.0.0/go.mod h1:jrpuAogTd400dnrH08LKmI/xc1MbPOebTwRqcT5RDeI=
 github.com/xdg-go/scram v1.1.2 h1:FHX5I5B4i4hKRVRBCFRxq1iQRej7WO3hhBuJf+UUySY=

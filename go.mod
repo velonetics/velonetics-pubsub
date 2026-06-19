@@ -3,9 +3,9 @@ module github.com/pucora/pucora-pubsub/v2
 go 1.25.0
 
 require (
+	github.com/pucora/lura/v2 v2.0.9
+	github.com/pucora/pucora-ratelimit/v3 v3.0.1
 	github.com/segmentio/kafka-go v0.4.51
-	github.com/pucora/lura/v2 v2.0.0
-	github.com/pucora/pucora-ratelimit/v3 v3.0.0
 	gocloud.dev v0.45.0
 	gocloud.dev/pubsub/kafkapubsub v0.45.0
 	gocloud.dev/pubsub/natspubsub v0.45.0
@@ -72,10 +72,10 @@ require (
 	github.com/nats-io/nuid v1.0.1 // indirect
 	github.com/pierrec/lz4/v4 v4.1.22 // indirect
 	github.com/pkg/browser v0.0.0-20240102092130-5ac0b6a4141c // indirect
+	github.com/pucora/flatmap v1.0.1 // indirect
 	github.com/rabbitmq/amqp091-go v1.10.0 // indirect
 	github.com/rcrowley/go-metrics v0.0.0-20250401214520-65e299d6c5c9 // indirect
 	github.com/valyala/fastrand v1.1.0 // indirect
-	github.com/pucora/flatmap v1.0.0 // indirect
 	go.opentelemetry.io/auto/sdk v1.2.1 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.63.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.63.0 // indirect
